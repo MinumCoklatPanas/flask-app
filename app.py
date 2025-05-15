@@ -8,7 +8,7 @@ from flask.wrappers import Response
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://<>:<>@<>:<>/<>"
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://dev:dev@localhost:5432/flask_db"
 db = SQLAlchemy(app)
 
 from models.employees import Employees
