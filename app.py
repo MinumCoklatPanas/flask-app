@@ -2,13 +2,20 @@ import json
 import pydash as _
 from datetime import datetime
 import pytz
+import os
 
 from flask import Flask, jsonify, request
 from flask.wrappers import Response
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://dev:dev@localhost:5432/flask_db"
+
+DB_USERNAME = os.getenv("DB_USERNAME")
+DB_PASWORD = os.getenv("DB_PASSWORD")
+DB_URL = os.getenv("DB_URL")
+DB_NAME = os.getenv("DB_NAME")
+
+app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql://{DB_USERNAME}:{DB_PASWORD}@{DB_URL}:5432/{DB_NAME}"
 db = SQLAlchemy(app)
 
 from models.employees import Employees
