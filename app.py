@@ -19,6 +19,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql://{DB_USERNAME}:{DB_PASWORD
 db = SQLAlchemy(app)
 
 from models.employees import Employees
+from services.employees import EmployeesService
 
 @app.route("/")
 def hello_world():
@@ -26,54 +27,46 @@ def hello_world():
 
 @app.route("/employees/add", methods=['POST'])
 def add_employee():
-  request_data = json.loads(request.data)
-  employee = Employees(
-    name=request_data["name"],
-    age=request_data["age"],
-    email=request_data["email"]
-  )
+  try:
+    employees_service = EmployeesService(db.session)
+    request_data = json.loads(request.data)
+    employees_service.insert_employee(request_data)
 
-  db.session.add(employee)
-  db.session.commit()
+    return Response(status=204, mimetype='application/json')
+  except Exception as ex:
+    return Response(status=422, response=f"Failed to insert employee : {ex}")
 
-  return {
-    "message": "success",
-    "data": employee.as_dict()
-  }
+@app.route("/employees/delete/<email>", methods=['DELETE'])
+def delete_employee(email):
+  try:
+    employees_service = EmployeesService(db.session)
+    employees_service.delete_employee(email)
 
-@app.route("/employees/delete/<employee_name>", methods=['DELETE'])
-def delete_employee(employee_name):
-  employee = db.session.query(Employees).filter_by(name=employee_name).one_or_none()
-
-  if employee is None:
-    return Response(f"employee {employee_name} not found.", status=422)
-
-  db.session.delete(employee)
-  db.session.commit()
-
-  return Response(status=204, mimetype='application/json')
+    return Response(status=204, mimetype="application/json")
+  except Exception as ex:
+    return Response(status=422, response=f"Failed to delete employee : {ex}")
 
 @app.route("/employees/get", methods=['GET'])
 def get_all_employees():
-  employees = db.session.query(Employees).all()
-  employees_arr = [e.as_dict() for e in employees]
+  try:
+    employees_service = EmployeesService(db.session)
+    all_employees = employees_service.get_all()
 
-  return employees_arr
+    return all_employees
+  except Exception as ex:
+    return Response(422, response=f"Failed to get all employees : {ex}")
 
-@app.route("/employees/update/<employee_id>", methods=['PATCH'])
-def update_employee(employee_id):
-  employee = db.session.query(Employees).filter_by(id=employee_id).one_or_none()
+@app.route("/employees/update/<email>", methods=['PATCH'])
+def update_employee(email):
+  try:
+    employees_service = EmployeesService(db.session)
+    request_data = json.loads(request.data)
 
-  if employee is None:
-    return Response(f"Employee with id {employee_id} not found.", status=422)
+    if _.is_empty(request_data):
+      return Response(status=422, response=f"Updated data cannot be empy.")
 
-  request_data = json.loads(request.data)
-  employee.name = _.get(request_data, "name", employee.name)
-  employee.age = _.get(request_data, "age", employee.age)
-  employee.email = _.get(request_data, "email", employee.email)
-  employee.updated_at = datetime.now(pytz.utc)
+    employees_service.update_employee(email=email, data=request_data)
 
-  db.session.add(employee)
-  db.session.commit()
-
-  return Response(status=204, mimetype='application/json')
+    return Response(status=204, mimetype='application/json')
+  except Exception as ex:
+    return Response(status=500, response=f"Failed to update data : {ex}")
