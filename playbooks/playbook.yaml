@@ -1,0 +1,42 @@
+- hosts: localhost
+  become: true
+
+  tasks:
+    - name: Install packages
+      apt:
+        pkg:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+
+    - name: Add Docker GPG Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu jammy stable
+        state: present
+
+    - name: Install Docker
+      apt:
+        pkg: docker-ce
+        state: latest
+        update_cache: true
+
+    - name: Pull Image
+      community.docker.docker_image:
+        name: "appan/flask-app-2:latest"
+        source: pull
+    
+    - name: Run Container
+      community.docker.docker_container:
+        name: "flask-app"
+        image: "appan/flask-app-2:latest"
+        ports:
+          - 5000:5000
+        detach: true
+        env_file: ../.env
+        network_mode: host
