@@ -19,7 +19,7 @@ updated_at  : Timestamp
 - Description : Create a new employee entry
 - Method  : `POST`
 - Request Body :
-  ```
+  ```json
   {
     "name": String [Required],
     "age": Integer [Required],
@@ -27,7 +27,7 @@ updated_at  : Timestamp
   }
   ```
   Example:
-  ```
+  ```json
   {
     "name": "affan",
     "age": 25,
@@ -35,7 +35,7 @@ updated_at  : Timestamp
   }
   ```
 - Response
-  ```
+  ```json
   {
     "employee": {
         "age": Integer,
@@ -49,7 +49,7 @@ updated_at  : Timestamp
   }
   ```
   Example:
-  ```
+  ```json
   {
     "employee": {
         "age": "25",
@@ -68,7 +68,7 @@ updated_at  : Timestamp
 - Description : Get all employee data
 - Method : `GET`
 - Response
-  ```
+  ```json
   {
     "employees": [
         {
@@ -96,7 +96,7 @@ updated_at  : Timestamp
   ```
 
   Example :
-  ```
+  ```json
   {
     "employees": [
         {
@@ -127,7 +127,7 @@ updated_at  : Timestamp
 - Parameters:
     - `email` : String
 - Request Body:
-  ```
+  ```json
   {
     "name": String [Optional],
     "age": Integer [Optional],
@@ -138,14 +138,14 @@ updated_at  : Timestamp
 
   Example:
   URL : `/employees/update/foo@bar.com`
-  ```
+  ```json
   {
     "name": "affan-test"
   }
   ```
 
 - Response
-  ```
+  ```json
   {
     "employee": {
         "age": Integer,
@@ -160,7 +160,7 @@ updated_at  : Timestamp
   ```
 
   Example:
-  ```
+  ```json
   {
     "employee": {
         "age": "25",
@@ -184,7 +184,7 @@ updated_at  : Timestamp
   Response Code `204`
 
 ### Deployment
-For the deployment, i am using [digitalocean](https://www.digitalocean.com/) cloud provider. The app can be acces through this address : http://170.64.206.172/
+For the deployment, i am using [digitalocean](https://www.digitalocean.com/) cloud provider. The app can be acces through this address : [http://170.64.206.172/](http://170.64.206.172/)
 
 I am using the provider's VM product (droplet) with the following stack:
 - App containerization using docker (will be explained further in section below)
@@ -193,7 +193,7 @@ I am using the provider's VM product (droplet) with the following stack:
 
 ## Containerization
 Here's the Dockerfile to create an image for the apps with explanation for each line
-```
+```Docker
 # Using existing python 3.9 as the base image
 FROM python:3.9-slim-buster
 
@@ -221,7 +221,10 @@ CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
 The image will be pushed to container registry in [dockerhub](https://hub.docker.com/) with tag `appan/flask-app-2:latest`
 
 ### Pushing image to registry
-Command : `docker push appan/flask-app-2:latest`
+Command : 
+```shell
+docker push appan/flask-app-2:latest
+```
 
 Result :
 
@@ -234,14 +237,20 @@ Result on dockerhub :
 ### Pulling image from registry
 To pull the image, i will be pulling it to my digitalocean VM
 
-Command : `docker pull appan/flask-app-2:latest`
+Command :
+```shell
+docker pull appan/flask-app-2:latest
+```
 
 Result :
 
 ![](/assets/img/docker-pull.png)
 
 ### Listing image
-Command : `docker image ls`
+Command :
+```shell
+docker image ls
+```
 
 Result :
 
@@ -249,7 +258,10 @@ Result :
 
 ### Run and list container
 
-Run container command : `docker run -p 5000:5000 -d --env-file .env --network=host --name flask-app appan/flask-app-2:latest`
+Run container command :
+```shell
+docker run -p 5000:5000 -d --env-file .env --network=host --name flask-app appan/flask-app-2:latest
+```
 
 flags :
 ```
@@ -259,7 +271,10 @@ flags :
 --network=host : using network mode "host" to enable accessing local postgres database
 ```
 
-List container command : `docker ps`
+List container command :
+```shell
+docker ps
+```
 
 Result :
 
@@ -269,7 +284,7 @@ Result :
 
 ### Deployment
 YAML deployment [file](/kubernetes/deployment.yaml):
-```
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -340,7 +355,7 @@ To expose kubernetes pods over a network, we can use kubernetes object called `S
 For this project, I will be using `NodePort` service to expose the deployment and make it accessible from outside the cluster.
 
 Service YAML [file](/kubernetes/service.yaml)
-```
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -359,7 +374,10 @@ The service will expose node `30000` on the cluster and maps it towards port `50
 
 ### List Pods
 
-Command : `kubectl get pods`
+Command :
+```shell
+kubectl get pods
+```
 
 Result :
 
@@ -367,7 +385,10 @@ Result :
 
 ### List Services
 
-Command : `kubectl get service`
+Command :
+```shell
+kubectl get service
+```
 
 Result :
 
@@ -443,7 +464,7 @@ Deployments is a kubernetes object with the purpose to manage a set of pods. Dep
 ### Running Playbook
 
 Here's the playbook YAML to install docker and run the container
-```
+```yaml
 - hosts: localhost
   become: true
 
@@ -492,7 +513,9 @@ To test it, I will be executing the playbook on an empty VM that still don't hav
 
 #### Executing the playbook
 
-`ansible-playbook playbooks/playbook.yaml -l localhost -u root`
+```shell
+ansible-playbook playbooks/playbook.yaml -l localhost -u root
+```
 
 Result:
 
@@ -500,7 +523,9 @@ Result:
 
 #### Checking the image
 
-`docker image ls`
+```shell
+docker image ls
+```
 
 ![](/assets/img/ansible-docker-image.png)
 
