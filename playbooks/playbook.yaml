@@ -30,7 +30,7 @@
       community.docker.docker_image:
         name: "appan/flask-app-2:latest"
         source: pull
-    
+
     - name: Run Container
       community.docker.docker_container:
         name: "flask-app"
