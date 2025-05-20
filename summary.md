@@ -224,9 +224,11 @@ The image will be pushed to container registry in [dockerhub](https://hub.docker
 Command : `docker push appan/flask-app-2:latest`
 
 Result :
+
 ![](/assets/img/docker-push.png)
 
 Result on dockerhub :
+
 ![](/assets/img/dockerhub.png)
 
 ### Pulling image from registry
@@ -235,12 +237,14 @@ To pull the image, i will be pulling it to my digitalocean VM
 Command : `docker pull appan/flask-app-2:latest`
 
 Result :
+
 ![](/assets/img/docker-pull.png)
 
 ### Listing image
 Command : `docker image ls`
 
 Result :
+
 ![](/assets/img/docker-ls.png)
 
 ### Run and list container
@@ -258,6 +262,7 @@ flags :
 List container command : `docker ps`
 
 Result :
+
 ![](/assets/img/docker-ps.png)
 
 ## Kubernetes
@@ -502,7 +507,9 @@ Result:
 #### Ensuring the container is running
 
 Container is running
+
 ![](/assets/img/ansible-docker-ps.png)
 
 Listening on port `5000`
+
 ![](/assets/img/ansible-netstat.png)
