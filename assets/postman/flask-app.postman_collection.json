@@ -1,0 +1,157 @@
+{
+	"info": {
+		"_postman_id": "adfa0831-af73-4e94-99b5-6d9d1947a98a",
+		"name": "flask-app",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22584287"
+	},
+	"item": [
+		{
+			"name": "Insert Employee",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"affan2\",\n    \"age\": 25,\n    \"email\": \"foo+2@bar.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{VM_URL}}/employees/add",
+					"protocol": "http",
+					"host": [
+						"{{VM_URL}}"
+					],
+					"path": [
+						"employees",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Employee",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{VM_URL}}/employees/delete/foo+2@bar.com",
+					"protocol": "http",
+					"host": [
+						"{{VM_URL}}"
+					],
+					"path": [
+						"employees",
+						"delete",
+						"foo+2@bar.com"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Employees",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{VM_URL}}/employees/get",
+					"protocol": "http",
+					"host": [
+						"{{VM_URL}}"
+					],
+					"path": [
+						"employees",
+						"get"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Employee",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"affan-test\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{VM_URL}}/employees/update/foo+2@bar.com",
+					"protocol": "http",
+					"host": [
+						"{{VM_URL}}"
+					],
+					"path": [
+						"employees",
+						"update",
+						"foo+2@bar.com"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Healthcheck",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{VM_URL}}",
+					"protocol": "http",
+					"host": [
+						"{{VM_URL}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
