@@ -25,6 +25,8 @@ class EmployeesService:
     )
     self.employees_query.insert(employee)
 
+    return employee
+
   def delete_employee(self, email):
     existing_employee = self.employees_query.get_by_email(
       email=email
@@ -54,3 +56,5 @@ class EmployeesService:
     existing_employee.updated_at = datetime.now(pytz.utc)
 
     self.employees_query.update_employee(existing_employee)
+
+    return existing_employee
